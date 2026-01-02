@@ -1,5 +1,9 @@
 name: Terraform Deploy
+defaults:
+  run:
+    working-directory: Laboratorio1
 
+  
 on:
   push:
     branches:
