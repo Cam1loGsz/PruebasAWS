@@ -1,0 +1,33 @@
+# =====================
+# Terraform
+# =====================
+
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+*.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# =====================
+# Secrets / Env vars
+# =====================
+
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# =====================
+# AWS
+# =====================
+
+.aws/
+credentials
+config
+
