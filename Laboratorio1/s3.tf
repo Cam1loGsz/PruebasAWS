@@ -6,7 +6,7 @@ module "s3_bucket" {
     enabled = true
   }
 
-  lifecycle_rules = [
+  rule = [
     {
       id      = "EliminarVersionesAntiguas"
       enabled = true
