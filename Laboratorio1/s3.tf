@@ -1,5 +1,5 @@
 module "s3_bucket" {
-  source = "https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-s3-bucket.git"
   bucket = "tfstate-s3-bucket"
 
     versioning = {
