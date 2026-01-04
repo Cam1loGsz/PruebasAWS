@@ -1,4 +1,3 @@
-# variable "vpc_id" {
-#     description = "The ID of the VPC where resources will be created"
-#     type        = string
-# }
+variable "managed_policy_arns" {
+  type = list(string)
+}
