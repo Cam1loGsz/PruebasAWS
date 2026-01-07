@@ -3,8 +3,8 @@ module "security_group" {
   for_each = local.security_groups
 
   vpc_id         = lookup(local.security_groups, each.key, {})["vpc_id"]
-  sg_name        = lookup(local.security_groups, each.key, {})["name"]
-  sg_description = lookup(local.security_groups, each.key, {})["description"]
+  sg_name        = lookup(local.security_groups, each.key, {})["sg_name"]
+  sg_description = lookup(local.security_groups, each.key, {})["sg_description"]
   ingress_rules  = lookup(local.security_groups, each.key, {})["ingress_rules"]
   egress_rules   = lookup(local.security_groups, each.key, {})["egress_rules"]
 }
