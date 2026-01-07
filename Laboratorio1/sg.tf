@@ -1,9 +1,9 @@
-module "security_groups" {
+module "security_group_ec2" {
     source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git"
     name   = "ec2-security-group"
     description = "Security group for EC2 instance"
     vpc_id = local.vpc_id
-    ingress_rules = [
+    security_group_ingress_rules = [
         {
             from_port   = 22
             to_port     = 22
@@ -17,7 +17,7 @@ module "security_groups" {
             cidr_blocks = ["0.0.0.0/0"]
         }
     ]
-    egress_rules = [
+    security_group_egress_rules = [
         {
             from_port   = 0
             to_port     = 0

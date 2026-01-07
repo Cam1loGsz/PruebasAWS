@@ -5,5 +5,5 @@ module "ec2_instance" {
   instance_type = "t3.micro"
   key_name      = "ec2-key-pair"
   user_data    = file("user_data.sh")
-  vpc_security_group_ids = [module.security_groups.this_security_group_id]
+  vpc_security_group_ids = [module.security_group_ec2.this_security_group_id]
 }
