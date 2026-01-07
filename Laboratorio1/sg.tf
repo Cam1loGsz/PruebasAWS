@@ -1,29 +1,10 @@
-module "security_group_ec2" {
-    source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git"
-    name   = "ec2-security-group"
-    use_name_prefix = false
-    description = "Security group for EC2 instance"
-    vpc_id = local.vpc_id
-    ingress_with_cidr_blocks = [
-        {
-            from_port   = 22
-            to_port     = 22
-            protocol    = "tcp"
-            cidr_blocks = "0.0.0.0/0"
-        },
-        {
-            from_port   = 80
-            to_port     = 80
-            protocol    = "tcp"
-            cidr_blocks = "0.0.0.0/0"
-        }
-    ]
-    egress_with_cidr_blocks = [
-        {
-            from_port   = 0
-            to_port     = 0
-            protocol    = "-1"
-            cidr_blocks = "0.0.0.0/0"
-        }
-    ]    
+module "security_group" {
+  source   = "git::https://github.com/Cam1loGsz/PruebasAWS.git//modules/SG?ref=main"
+  for_each = local.security_groups
+
+  vpc_id         = lookup(local.security_groups, each.key, {})["vpc_id"]
+  sg_name        = lookup(local.security_groups, each.key, {})["name"]
+  sg_description = lookup(local.security_groups, each.key, {})["description"]
+  ingress_rules  = lookup(local.security_groups, each.key, {})["ingress_rules"]
+  egress_rules   = lookup(local.security_groups, each.key, {})["egress_rules"]
 }
