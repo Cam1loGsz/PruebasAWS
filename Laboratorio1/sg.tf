@@ -1,6 +1,7 @@
 module "security_group_ec2" {
     source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git"
     name   = "ec2-security-group"
+    use_name_prefix = false
     description = "Security group for EC2 instance"
     vpc_id = local.vpc_id
     ingress_with_cidr_blocks = [
