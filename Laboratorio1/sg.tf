@@ -3,26 +3,26 @@ module "security_group_ec2" {
     name   = "ec2-security-group"
     description = "Security group for EC2 instance"
     vpc_id = local.vpc_id
-    security_group_ingress_rules = [
+    ingress_with_cidr_blocks = [
         {
             from_port   = 22
             to_port     = 22
             protocol    = "tcp"
-            cidr_blocks = ["0.0.0.0/0"]
+            cidr_blocks = "0.0.0.0/0"
         },
         {
             from_port   = 80
             to_port     = 80
             protocol    = "tcp"
-            cidr_blocks = ["0.0.0.0/0"]
+            cidr_blocks = "0.0.0.0/0"
         }
     ]
-    security_group_egress_rules = [
+    egress_with_cidr_blocks = [
         {
             from_port   = 0
             to_port     = 0
             protocol    = "-1"
-            cidr_blocks = ["0.0.0.0/0"]
+            cidr_blocks = "0.0.0.0/0"
         }
     ]    
 }
