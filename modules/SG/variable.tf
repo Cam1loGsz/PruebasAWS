@@ -22,7 +22,7 @@ variable "ingress_rules" {
     self             = optional(bool)
     description      = optional(string)
   }))
-  default = {}
+  default = []
 }
 
 variable "egress_rules" {
@@ -37,6 +37,6 @@ variable "egress_rules" {
     prefix_list_id   = optional(list(string))
     description      = optional(string)
   }))
-  default = {}
+  default = []
   
 }
