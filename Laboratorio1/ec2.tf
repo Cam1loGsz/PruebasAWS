@@ -7,6 +7,6 @@ module "ec2_instance" {
   user_data              = file("user_data.sh")
   vpc_security_group_ids = [module.security_group["ec2_tests_sg"].security_group_id]
   subnet_id              = "subnet-04e7473716d36f167"
-  iam_instance_profile   = "ec2-test-role"
+  iam_role_name          = aws_iam_role.ec2-test-role.name
   create_security_group  = false
 }
