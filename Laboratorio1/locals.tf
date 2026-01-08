@@ -5,8 +5,8 @@ locals {
   security_groups = {
     ec2_tests_sg = {
       vpc_id         = "vpc-093b20febcca86e89"
-      sg_name        = "EC2-Tests-SG"
-      sg_description = "Security Group for EC2 instance"
+      name        = "EC2-Tests-SG"
+      description = "Security Group for EC2 instance"
       ingress_rules = [
         {
           from_port   = 22
@@ -32,8 +32,8 @@ locals {
     }
     ec2_tests_sg2 = {
       vpc_id         = "vpc-093b20febcca86e89"
-      sg_name        = "EC2-Tests-SG2"
-      sg_description = "Security Group for EC2 instance"
+      name        = "EC2-Tests-SG2"
+      description = "Security Group for EC2 instance"
       ingress_rules = [
         {
           from_port   = 22
