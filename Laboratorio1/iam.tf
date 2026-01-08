@@ -11,3 +11,9 @@ resource "aws_iam_role_policy_attachment" "managed" {
   role       = aws_iam_role.ec2-test-role.name
   policy_arn = each.value
 }
+
+# Crea un perfil de instancia que referencia el rol
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2-instance-profile"
+  role = aws_iam_role.ec2-test-role.name
+}
