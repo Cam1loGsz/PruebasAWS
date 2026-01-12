@@ -9,4 +9,11 @@ module "ec2_instance" {
   subnet_id              = "subnet-04e7473716d36f167"
   iam_instance_profile    = aws_iam_instance_profile.ec2_profile.name
   create_security_group  = false
+  ebs_volumes = [
+    {
+      device_name           = "/dev/xvdf"
+      volume_id             = "vol-0c842202671b8913c"
+      delete_on_termination = true
+    }
+  ]
 }
