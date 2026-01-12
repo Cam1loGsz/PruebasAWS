@@ -40,18 +40,18 @@ locals {
   }
 }
 ##### EBS VOLUME #####
-resource "aws_ebs_volume" "volume2" {
-  availability_zone = "us-east-1a"
-  size              = 2
+# resource "aws_ebs_volume" "volume2" {
+#   availability_zone = "us-east-1a"
+#   size              = 2
 
-  tags = {
-    Name = "EBS Volume for EC2 Instance"
-  }
-}
+#   tags = {
+#     Name = "EBS Volume for EC2 Instance"
+#   }
+# }
 
-##### ATTACH EBS VOLUME TO EC2 INSTANCE #####
-resource "aws_volume_attachment" "ebs_att" {
-  device_name = "/dev/sdh"
-  volume_id   = aws_ebs_volume.volume2.id
-  instance_id = module.ec2_instance.id
-}
+# ##### ATTACH EBS VOLUME TO EC2 INSTANCE #####
+# resource "aws_volume_attachment" "ebs_att" {
+#   device_name = "/dev/sdh"
+#   volume_id   = aws_ebs_volume.volume2.id
+#   instance_id = module.ec2_instance.id
+# }
