@@ -39,3 +39,12 @@ locals {
 
   }
 }
+##### EBS VOLUME #####
+resource "aws_ebs_volume" "volume2" {
+  availability_zone = "us-east-1a"
+  size              = 2
+
+  tags = {
+    Name = "EBS Volume for EC2 Instance"
+  }
+}
