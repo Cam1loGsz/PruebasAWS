@@ -48,3 +48,10 @@ resource "aws_ebs_volume" "volume2" {
     Name = "EBS Volume for EC2 Instance"
   }
 }
+
+##### ATTACH EBS VOLUME TO EC2 INSTANCE #####
+resource "aws_volume_attachment" "ebs_att" {
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.volume2.id
+  instance_id = module.ec2_instance.id
+}
