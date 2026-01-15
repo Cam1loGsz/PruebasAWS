@@ -42,7 +42,7 @@ module "alb" {
     {
       port     = 80
       protocol = "HTTP"
-      target_group_key = "tg-http"
+      default_target_group_key = "tg-http"
         
     }
   ]
