@@ -51,12 +51,12 @@ module "alb" {
 
 resource "aws_lb_target_group_attachment" "ec2_1" {
   target_group_arn = module.alb.target_group_arns["tg-http"]
-  target_id        = module.ec2_instance.id
+  target_id        = "i-0b30c54787f2db922"
   port             = 80
 }
 
 resource "aws_lb_target_group_attachment" "ec2_2" {
   target_group_arn = module.alb.target_group_arns["tg-http"]
-  target_id        = module.ec2_instance_2.id
+  target_id        = "i-019f4b14842ee3181"
   port             = 80
 }
