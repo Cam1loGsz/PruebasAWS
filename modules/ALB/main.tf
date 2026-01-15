@@ -147,55 +147,27 @@ resource "aws_lb_target_group" "main" {
   )
 }
 
-# HTTP Listener (redirect to HTTPS por defecto si está habilitado)
-resource "aws_lb_listener" "http" {
-  count = var.enable_http_listener ? 1 : 0
+# Listeners dinámicos
+resource "aws_lb_listener" "main" {
+  for_each = { for idx, listener in var.listeners : idx => listener }
 
   load_balancer_arn = aws_lb.main.arn
-  port              = var.http_port
-  protocol          = "HTTP"
+  port              = each.value.port
+  protocol          = each.value.protocol
 
-  default_action {
-    type = var.http_redirect_to_https ? "redirect" : "forward"
-
-    dynamic "redirect" {
-      for_each = var.http_redirect_to_https ? [1] : []
-      content {
-        port        = var.https_port
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
-      }
-    }
-
-    dynamic "forward" {
-      for_each = var.http_redirect_to_https ? [] : [1]
-      content {
-        target_group {
-          arn = aws_lb_target_group.main[var.default_target_group_key].arn
-        }
-      }
-    }
-  }
-
-  tags = var.tags
-}
-
-# HTTPS Listener
-resource "aws_lb_listener" "https" {
-  count = var.enable_https_listener ? 1 : 0
-
-  load_balancer_arn = aws_lb.main.arn
-  port              = var.https_port
-  protocol          = "HTTPS"
-  ssl_policy        = var.ssl_policy
-  certificate_arn   = var.certificate_arn
+  # SSL/TLS configuration (solo si el protocolo es HTTPS)
+  ssl_policy      = each.value.protocol == "HTTPS" ? lookup(each.value, "ssl_policy", "ELBSecurityPolicy-TLS13-1-2-2021-06") : null
+  certificate_arn = each.value.protocol == "HTTPS" ? lookup(each.value, "certificate_arn", null) : null
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.main[var.default_target_group_key].arn
+    target_group_arn = aws_lb_target_group.main[each.value.default_target_group_key].arn
   }
 
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    lookup(each.value, "tags", {})
+  )
 }
 
 # Listener Rules - FORWARD
@@ -205,7 +177,7 @@ resource "aws_lb_listener_rule" "forward" {
     if rule.type == "forward"
   }
 
-  listener_arn = each.value.listener_protocol == "HTTPS" ? aws_lb_listener.https[0].arn : aws_lb_listener.http[0].arn
+  listener_arn = aws_lb_listener.main[each.value.listener_index].arn
   priority     = each.value.priority
 
   action {
@@ -288,7 +260,7 @@ resource "aws_lb_listener_rule" "redirect" {
     if rule.type == "redirect"
   }
 
-  listener_arn = each.value.listener_protocol == "HTTPS" ? aws_lb_listener.https[0].arn : aws_lb_listener.http[0].arn
+  listener_arn = aws_lb_listener.main[each.value.listener_index].arn
   priority     = each.value.priority
 
   action {
@@ -354,8 +326,8 @@ resource "aws_lb_listener_rule" "redirect" {
 
 # Additional SSL/TLS Certificates
 resource "aws_lb_listener_certificate" "additional" {
-  for_each = var.enable_https_listener ? var.additional_certificates : {}
+  for_each = var.additional_certificates
 
-  listener_arn    = aws_lb_listener.https[0].arn
-  certificate_arn = each.value
+  listener_arn    = aws_lb_listener.main[each.value.listener_index].arn
+  certificate_arn = each.value.certificate_arn
 }

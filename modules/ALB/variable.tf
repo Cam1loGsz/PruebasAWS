@@ -188,52 +188,55 @@ variable "access_logs_prefix" {
 # Listeners Configuration
 # ==========================================
 
-variable "enable_http_listener" {
-  description = "Habilitar listener HTTP"
-  type        = bool
-  default     = true
-}
+variable "listeners" {
+  description = <<-EOT
+    Lista de listeners para el ALB. Cada listener debe tener:
+    - port: Puerto del listener (80, 443, etc.)
+    - protocol: Protocolo (HTTP o HTTPS)
+    - default_target_group_key: Key del target group por defecto
+    - ssl_policy: (Opcional) Política SSL solo para HTTPS - default: ELBSecurityPolicy-TLS13-1-2-2021-06
+    - certificate_arn: (Opcional) ARN del certificado SSL/TLS, requerido para HTTPS
+    - tags: (Opcional) Tags adicionales para el listener
+  EOT
+  type = list(object({
+    port                     = number
+    protocol                 = string
+    default_target_group_key = string
+    ssl_policy               = optional(string)
+    certificate_arn          = optional(string)
+    tags                     = optional(map(string))
+  }))
+  default = []
 
-variable "http_port" {
-  description = "Puerto para el listener HTTP"
-  type        = number
-  default     = 80
-}
+  validation {
+    condition = alltrue([
+      for listener in var.listeners :
+      contains(["HTTP", "HTTPS"], listener.protocol)
+    ])
+    error_message = "El protocolo debe ser HTTP o HTTPS."
+  }
 
-variable "http_redirect_to_https" {
-  description = "Redirigir automáticamente HTTP a HTTPS"
-  type        = bool
-  default     = true
-}
-
-variable "enable_https_listener" {
-  description = "Habilitar listener HTTPS"
-  type        = bool
-  default     = true
-}
-
-variable "https_port" {
-  description = "Puerto para el listener HTTPS"
-  type        = number
-  default     = 443
-}
-
-variable "ssl_policy" {
-  description = "Política SSL para el listener HTTPS"
-  type        = string
-  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-}
-
-variable "certificate_arn" {
-  description = "ARN del certificado SSL/TLS principal"
-  type        = string
-  default     = ""
+  validation {
+    condition = alltrue([
+      for listener in var.listeners :
+      listener.protocol == "HTTPS" ? listener.certificate_arn != null : true
+    ])
+    error_message = "certificate_arn es requerido cuando el protocolo es HTTPS."
+  }
 }
 
 variable "additional_certificates" {
-  description = "Mapa de certificados SSL/TLS adicionales (key = nombre, value = ARN)"
-  type        = map(string)
-  default     = {}
+  description = <<-EOT
+    Mapa de certificados SSL/TLS adicionales para agregar a listeners HTTPS.
+    Cada entrada debe tener:
+    - listener_index: Índice del listener al que agregar el certificado (0, 1, 2, etc.)
+    - certificate_arn: ARN del certificado adicional
+  EOT
+  type = map(object({
+    listener_index  = number
+    certificate_arn = string
+  }))
+  default = {}
 }
 
 # ==========================================
@@ -291,8 +294,9 @@ variable "target_groups" {
 }
 
 variable "default_target_group_key" {
-  description = "Key del target group por defecto para la acción default del listener"
+  description = "(DEPRECATED) Este campo ya no se usa. Define default_target_group_key en cada listener"
   type        = string
+  default     = ""
 }
 
 # ==========================================
@@ -305,7 +309,7 @@ variable "listener_rules" {
     
     Campos obligatorios:
     - type: Tipo de acción ("forward" o "redirect")
-    - listener_protocol: Protocolo del listener al que se aplica ("HTTP" o "HTTPS")
+    - listener_index: Índice del listener al que se aplica (0, 1, 2, etc.)
     - priority: Prioridad de la regla (1-50000, menor número = mayor prioridad)
     
     Para tipo "forward":
@@ -335,10 +339,10 @@ variable "listener_rules" {
     - tags: (Opcional) Tags adicionales para la regla
   EOT
   type = map(object({
-    type              = string
-    listener_protocol = string
-    priority          = number
-    target_group_key  = optional(string)
+    type             = string
+    listener_index   = number
+    priority         = number
+    target_group_key = optional(string)
     redirect = optional(object({
       protocol    = optional(string)
       port        = optional(string)
@@ -347,19 +351,19 @@ variable "listener_rules" {
       query       = optional(string)
       status_code = optional(string)
     }))
-    path_pattern         = optional(list(string))
-    host_header          = optional(list(string))
-    http_header          = optional(object({
+    path_pattern        = optional(list(string))
+    host_header         = optional(list(string))
+    http_header = optional(object({
       name   = string
       values = list(string)
     }))
-    http_request_method  = optional(list(string))
-    query_string         = optional(list(object({
+    http_request_method = optional(list(string))
+    query_string = optional(list(object({
       key   = optional(string)
       value = string
     })))
-    source_ip            = optional(list(string))
-    tags                 = optional(map(string))
+    source_ip = optional(list(string))
+    tags      = optional(map(string))
   }))
   default = {}
 }

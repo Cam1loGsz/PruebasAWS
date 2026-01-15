@@ -57,14 +57,30 @@ output "alb_zone_id" {
 # Listener Outputs
 # ==========================================
 
-output "http_listener_arn" {
-  description = "ARN del listener HTTP"
-  value       = var.enable_http_listener ? aws_lb_listener.http[0].arn : null
+output "listener_arns" {
+  description = "Mapa de ARNs de los listeners (índice => ARN)"
+  value = {
+    for idx, listener in aws_lb_listener.main : idx => listener.arn
+  }
 }
 
-output "https_listener_arn" {
-  description = "ARN del listener HTTPS"
-  value       = var.enable_https_listener ? aws_lb_listener.https[0].arn : null
+output "listener_ids" {
+  description = "Mapa de IDs de los listeners (índice => ID)"
+  value = {
+    for idx, listener in aws_lb_listener.main : idx => listener.id
+  }
+}
+
+output "listeners_info" {
+  description = "Información completa de los listeners"
+  value = {
+    for idx, listener in aws_lb_listener.main : idx => {
+      arn      = listener.arn
+      id       = listener.id
+      port     = listener.port
+      protocol = listener.protocol
+    }
+  }
 }
 
 # ==========================================
@@ -140,8 +156,11 @@ output "alb_complete_info" {
       arn_suffix = aws_lb.main.arn_suffix
     }
     listeners = {
-      http  = var.enable_http_listener ? aws_lb_listener.http[0].arn : null
-      https = var.enable_https_listener ? aws_lb_listener.https[0].arn : null
+      for idx, listener in aws_lb_listener.main : idx => {
+        arn      = listener.arn
+        port     = listener.port
+        protocol = listener.protocol
+      }
     }
     target_groups = {
       for key, tg in aws_lb_target_group.main : key => {
