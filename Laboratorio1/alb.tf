@@ -2,9 +2,9 @@ module "alb" {
   source = "git::https://github.com/Cam1loGsz/PruebasAWS.git//modules/ALB?ref=main"
 
   name   = "alb-simple"
-  vpc_id = locals.vpc_id
+  vpc_id = local.vpc_id
 
-  subnets = locals.subnet_ids
+  subnets = local.subnet_ids
 
   internal              = false
   create_security_group = false
@@ -38,14 +38,13 @@ module "alb" {
   #################
   # LISTENER 80
   #################
-  listeners = {
-    http = {
+  listeners = [
+    {
       port     = 80
       protocol = "HTTP"
       target_group_key = "tg-http"
         
     }
-  }
-
+  ]
   
 }
