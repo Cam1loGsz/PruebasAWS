@@ -1,3 +1,0 @@
-[submodule "modules/ec2"]
-	path = modules/ec2
-	url = https://github.com/Cam1loGsz/EC2.git
