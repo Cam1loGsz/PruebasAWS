@@ -8,7 +8,7 @@ module "alb" {
 
   internal              = false
   create_security_group = false
-  security_groups       = [module.security_group["alb_tests_sg"].security_group_id]
+  additional_security_group_ids     = [module.security_group["alb_tests_sg"].security_group_id]
   enable_cross_zone_load_balancing = true
 
   #################
