@@ -193,7 +193,7 @@ variable "listeners" {
     Lista de listeners para el ALB. Cada listener debe tener:
     - port: Puerto del listener (80, 443, etc.)
     - protocol: Protocolo (HTTP o HTTPS)
-    - default_target_group_key: Key del target group por defecto
+    - default_target_group: Key del target group por defecto
     - ssl_policy: (Opcional) Política SSL solo para HTTPS - default: ELBSecurityPolicy-TLS13-1-2-2021-06
     - certificate_arn: (Opcional) ARN del certificado SSL/TLS, requerido para HTTPS
     - tags: (Opcional) Tags adicionales para el listener
@@ -201,7 +201,7 @@ variable "listeners" {
   type = list(object({
     port                     = number
     protocol                 = string
-    default_target_group_key = string
+    default_target_group = string
     ssl_policy               = optional(string)
     certificate_arn          = optional(string)
     tags                     = optional(map(string))
@@ -293,8 +293,8 @@ variable "target_groups" {
   }))
 }
 
-variable "default_target_group_key" {
-  description = "(DEPRECATED) Este campo ya no se usa. Define default_target_group_key en cada listener"
+variable "default_target_group" {
+  description = "(DEPRECATED) Este campo ya no se usa. Define default_target_group en cada listener"
   type        = string
   default     = ""
 }

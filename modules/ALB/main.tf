@@ -161,7 +161,7 @@ resource "aws_lb_listener" "main" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.main[each.value.default_target_group_key].arn
+    target_group_arn = aws_lb_target_group.main[each.value.default_target_group].arn
   }
 
   tags = merge(
