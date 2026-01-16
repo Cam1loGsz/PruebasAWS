@@ -25,6 +25,12 @@ locals {
           source_security_group_id = "sg-064402de8a9bbbef6"
         },
         {
+          from_port = 80
+          to_port   = 80
+          protocol  = "tcp"
+          source_security_group_id = "sg-0496b6c3ab65eab62"
+        },
+        {
           from_port   = 443
           to_port     = 443
           protocol    = "tcp"
