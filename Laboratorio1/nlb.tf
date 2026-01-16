@@ -48,11 +48,11 @@ module "nlb" {
   ################
   # LISTENER 80
   ################
-  listeners = [
-    {
-      port     = 80
-      protocol = "TCP"
-      default_target_group = "tg-tcp-80"
+  listeners = {
+    listener_80 = {
+      port               = 80
+      protocol           = "TCP"
+      target_group_key   = "tg-tcp-80"
     }
-  ]
+  }
 }
