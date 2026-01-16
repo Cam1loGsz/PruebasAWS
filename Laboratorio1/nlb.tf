@@ -8,7 +8,7 @@ module "nlb" {
 
   internal = false
 
-  security_group_ids = [module.security_group["nlb_tests_sg"].security_group_id]
+  security_group_id = [module.security_group["nlb_tests_sg"].security_group_id]
 
   enable_cross_zone_load_balancing = true
 
