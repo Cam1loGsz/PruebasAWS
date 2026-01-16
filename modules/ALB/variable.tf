@@ -201,7 +201,7 @@ variable "listeners" {
   type = list(object({
     port                     = number
     protocol                 = string
-    default_target_group = string
+    default_target_group     = string
     ssl_policy               = optional(string)
     certificate_arn          = optional(string)
     tags                     = optional(map(string))

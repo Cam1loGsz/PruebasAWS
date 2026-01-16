@@ -34,11 +34,11 @@ module "nlb" {
 
       targets = [
         {
-          id   = "i-0123456789abcdef0"
+          target_id   = "i-0123456789abcdef0"
           port = 80
         },
         {
-          id   = "i-0fedcba9876543210"
+          target_id   = "i-0fedcba9876543210"
           port = 80
         }
       ]
