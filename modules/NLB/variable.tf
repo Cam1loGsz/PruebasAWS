@@ -28,8 +28,8 @@ variable "enable_cross_zone_load_balancing" {
 
 variable "security_group_id" {
   description = "ID del Security Group a asociar al NLB (opcional)"
-  type        = string
-  default     = null
+  type        = list(string)
+  default     = []
 }
 
 variable "enable_access_logs" {
