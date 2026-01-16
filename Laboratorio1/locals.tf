@@ -22,13 +22,7 @@ locals {
           from_port   = 80
           to_port     = 80
           protocol    = "tcp"
-          source_security_group_id = module.security_group["alb_tests_sg"].security_group_id
-        },
-         {
-          from_port   = 80
-          to_port     = 80
-          protocol    = "tcp"
-          source_security_group_id = module.security_group["nlb_tests_sg"].security_group_id
+          source_security_group_id = "sg-064402de8a9bbbef6"
         },
         {
           from_port   = 443
