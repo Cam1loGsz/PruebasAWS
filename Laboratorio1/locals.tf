@@ -22,7 +22,13 @@ locals {
           from_port   = 80
           to_port     = 80
           protocol    = "tcp"
-          cidr_blocks = ["0.0.0.0/0"]
+          source_security_group_id = module.security_group["alb_tests_sg"].security_group_id
+        },
+         {
+          from_port   = 80
+          to_port     = 80
+          protocol    = "tcp"
+          source_security_group_id = module.security_group["nlb_tests_sg"].security_group_id
         },
         {
           from_port   = 443
@@ -54,6 +60,27 @@ locals {
         {
           from_port   = 443
           to_port     = 443
+          protocol    = "tcp"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
+      ]
+      egress_rules = [
+        {
+          from_port   = 0
+          to_port     = 0
+          protocol    = "-1"
+          cidr_blocks = ["0.0.0.0/0"]
+        }
+      ]
+    }
+    nlb_tests_sg = {
+      vpc_id      = "vpc-093b20febcca86e89"
+      name        = "nlb-sg"
+      description = "Security Group for alb"
+      ingress_rules = [
+        {
+          from_port   = 80
+          to_port     = 80
           protocol    = "tcp"
           cidr_blocks = ["0.0.0.0/0"]
         }
