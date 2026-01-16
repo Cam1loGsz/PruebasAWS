@@ -21,7 +21,7 @@ resource "aws_lb" "this" {
   enable_cross_zone_load_balancing = var.enable_cross_zone_load_balancing
 
   # Security Group solo se aplica si se proporciona
-  security_groups = var.security_group_id != null ? [var.security_group_id] : null
+  security_groups = var.security_group_id != null ? var.security_group_id : null
 
   # Configuración de logs de acceso
   dynamic "access_logs" {
